@@ -76,6 +76,9 @@ __global__ void adam_step(
 	if (i >= n_elements) return;
 
 	float gradient = (float)gradients[i] / loss_scale;
+	if (!isfinite(gradient)) {
+		gradient = 0;
+	}
 	if (i >= n_matrix_weights) {
 		if (!optimize_non_matrix_params || (gradient == 0 && skip_zero_grad_non_matrix_params)) {
 			return;
